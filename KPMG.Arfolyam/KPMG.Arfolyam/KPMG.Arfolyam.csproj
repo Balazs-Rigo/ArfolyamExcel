@@ -1,0 +1,122 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{6A15CBD6-1DCE-438E-AE9D-F902D600FD6B}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>KPMG.Arfolyam</RootNamespace>
+    <AssemblyName>KPMG.Arfolyam</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Connected Services\MNBArfolyamServiceSoapClient\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+    <None Include="Connected Services\MNBArfolyamServiceSoapClient\arfolyamok.wsdl" />
+    <None Include="Connected Services\MNBArfolyamServiceSoapClient\arfolyamok.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\MNBArfolyamServiceSoapClient\arfolyamok1.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\MNBArfolyamServiceSoapClient\KPMG.Arfolyam.MNBArfolyamServiceSoapClient.GetCurrenciesResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\MNBArfolyamServiceSoapClient\KPMG.Arfolyam.MNBArfolyamServiceSoapClient.GetCurrenciesResponseBody.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\MNBArfolyamServiceSoapClient\KPMG.Arfolyam.MNBArfolyamServiceSoapClient.GetCurrencyUnitsResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\MNBArfolyamServiceSoapClient\KPMG.Arfolyam.MNBArfolyamServiceSoapClient.GetCurrencyUnitsResponseBody.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\MNBArfolyamServiceSoapClient\KPMG.Arfolyam.MNBArfolyamServiceSoapClient.GetCurrentExchangeRatesResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\MNBArfolyamServiceSoapClient\KPMG.Arfolyam.MNBArfolyamServiceSoapClient.GetCurrentExchangeRatesResponseBody.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\MNBArfolyamServiceSoapClient\KPMG.Arfolyam.MNBArfolyamServiceSoapClient.GetDateIntervalResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\MNBArfolyamServiceSoapClient\KPMG.Arfolyam.MNBArfolyamServiceSoapClient.GetDateIntervalResponseBody.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\MNBArfolyamServiceSoapClient\KPMG.Arfolyam.MNBArfolyamServiceSoapClient.GetExchangeRatesResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\MNBArfolyamServiceSoapClient\KPMG.Arfolyam.MNBArfolyamServiceSoapClient.GetExchangeRatesResponseBody.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\MNBArfolyamServiceSoapClient\KPMG.Arfolyam.MNBArfolyamServiceSoapClient.GetInfoResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\MNBArfolyamServiceSoapClient\KPMG.Arfolyam.MNBArfolyamServiceSoapClient.GetInfoResponseBody.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\MNBArfolyamServiceSoapClient\MNBArfolyamServiceSoapImpl.wsdl" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Connected Services\" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadataStorage Include="Connected Services\MNBArfolyamServiceSoapClient\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Connected Services\MNBArfolyamServiceSoapClient\configuration91.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Connected Services\MNBArfolyamServiceSoapClient\configuration.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Connected Services\MNBArfolyamServiceSoapClient\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>
