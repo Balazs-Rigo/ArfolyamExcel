@@ -55,7 +55,7 @@ namespace KPMG.Arfolyam
             }
 
             exchangeRatesRequestBody.startDate = "2015-10-01";
-            exchangeRatesRequestBody.endDate = "2015-10-5";
+            exchangeRatesRequestBody.endDate = "2015-10-20";
             exchangeRatesRequestBody.currencyNames = string.Join(",",currencyList.Take(10));
 
             var exchangeRates = client.GetExchangeRates(exchangeRatesRequestBody);
@@ -121,8 +121,8 @@ namespace KPMG.Arfolyam
                 {
                         exchangeRateDailyModel = new ExchangeRateDailyModel();
                         exchangeRateDailyModel.Date = rdr.GetAttribute("date");
-                        Console.WriteLine("Day");
-                        Console.WriteLine("Attribute count: "+rdr.GetAttribute("date"));
+                        //Console.WriteLine("Day");
+                        //Console.WriteLine("Attribute count: "+rdr.GetAttribute("date"));
                 }
 
                 if (rdr.NodeType == XmlNodeType.Element && rdr.LocalName == "Rate")
@@ -163,6 +163,26 @@ namespace KPMG.Arfolyam
                 //   // Console.WriteLine("node while: "+rdr.LocalName);
                 //}
             }
+
+            DataTable dataTable= new DataTable();
+            dataTable.Columns.Add("Datum");
+            foreach (var currency in currencyList)
+            {
+                dataTable.Columns.Add(currency);
+            }
+
+            i = 0;
+            foreach (var dailyModel in exchangeRateDailyModels)
+            {
+                dataTable.Rows.Add();
+                dataTable.Rows[i]["Datum"] = dailyModel.Date;
+
+                foreach (var exchangeRate in dailyModel.ExchangeRate)
+                {
+                    dataTable.Rows[i][exchangeRate.Currency] = exchangeRate.ExchangeRate;
+                }
+                i++;
+            }          
 
 
             string exchangeRatesXMLString = XElement.Parse(exchangeRates.GetExchangeRatesResult).ToString();
