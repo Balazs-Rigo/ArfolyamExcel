@@ -1,6 +1,8 @@
 ﻿using KPMG.Arfolyam.MNBArfolyamServiceSoapClient;
 using System;
 using System.Collections.Generic;
+using System.Data;
+using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
@@ -25,19 +27,12 @@ namespace KPMG.Arfolyam
 
             var exchangeRatesRequestBody = new GetExchangeRatesRequestBody();
 
-            var currentExchangeRatesRequestBody = new GetCurrentExchangeRatesRequestBody();
-
-            var dateIntervalRequestBody = new GetDateIntervalRequestBody();
-
-            var dateInterval = client.GetDateInterval(dateIntervalRequestBody);
-
-            var intervalDataResult = dateInterval.GetDateIntervalResult;
 
             var currencies = client.GetCurrencies(currenciesRequestBody);
 
-            currencyUnitsRequestBody.currencyNames = "HUF,AUD,EUR,USD,IDR,JPY,ITL,GRD";
+            //currencyUnitsRequestBody.currencyNames = "HUF,AUD,EUR,USD,IDR,JPY,ITL,GRD";
 
-            var currencyUnits = client.GetCurrencyUnits(currencyUnitsRequestBody);
+           // var currencyUnits = client.GetCurrencyUnits(currencyUnitsRequestBody);
 
             #region get currencies to list
             XmlDocument xml = new XmlDocument();
@@ -51,13 +46,19 @@ namespace KPMG.Arfolyam
             }
             #endregion
 
-            exchangeRatesRequestBody.startDate = "2022-10-01";
-            exchangeRatesRequestBody.endDate = "2022-12-02";
-            exchangeRatesRequestBody.currencyNames = string.Join(",",currencyList.Take(11));
+            DataTable exchangeRatesTable = new DataTable();
+            exchangeRatesTable.Columns.Add("Datum", typeof(string));
+
+            foreach (var currency in currencyList)
+            {
+                exchangeRatesTable.Columns.Add(currency, typeof(string));
+            }
+
+            exchangeRatesRequestBody.startDate = "2015-10-01";
+            exchangeRatesRequestBody.endDate = "2015-10-5";
+            exchangeRatesRequestBody.currencyNames = string.Join(",",currencyList.Take(3));
 
             var exchangeRates = client.GetExchangeRates(exchangeRatesRequestBody);
-
-            var currentExchangeRates = client.GetCurrentExchangeRates(currentExchangeRatesRequestBody);
 
             string currenciesXMLString = XElement.Parse(currencies.GetCurrenciesResult).ToString();    
 
@@ -66,25 +67,86 @@ namespace KPMG.Arfolyam
             Console.WriteLine(currenciesXMLString);
             Console.WriteLine();
 
-            
+            //string currencyUnitsXMLString = XElement.Parse(currencyUnits.GetCurrencyUnitsResult).ToString();
+            //Console.WriteLine("currency units : ");
+            //Console.WriteLine();
+            //Console.WriteLine(currencyUnitsXMLString);
+            //Console.WriteLine();
 
-            string currencyUnitsXMLString = XElement.Parse(currencyUnits.GetCurrencyUnitsResult).ToString();
-            Console.WriteLine("currency units : ");
-            Console.WriteLine();
-            Console.WriteLine(currencyUnitsXMLString);
-            Console.WriteLine();
+            #region get values from exchangeRates
+            //XmlDocument xmlExchangeRates = new XmlDocument();
+            //xml.LoadXml(exchangeRates.GetExchangeRatesResult);
+
+            //List<string> excahangeRatesList = new List<string>();
+            //XmlNodeList xnListExchangeRates = xml.SelectNodes("/MNBExchangeRates/Day/Rate");
+
+            //List<ExchangeRateDailyModel> exchangeRateDailyModels = new List<ExchangeRateDailyModel>();
+            //foreach (XmlNode xn in xnListExchangeRates)
+            //{
+            //    var parentNodeXelement = XElement.Parse(xn.ParentNode.OuterXml);
+            //    var date = parentNodeXelement.FirstAttribute.Value;
+            //    var CurrentNodeXelement = XElement.Parse(xn.OuterXml);
+            //    var currency = CurrentNodeXelement.LastAttribute.Value;
+            //    var excangeRate = xn.InnerText;
+
+            //    ExchangeRateDailyModel exchangeRateDailyModel = new ExchangeRateDailyModel();
+            //    ExchangeRateModel exchangeRateModel = new ExchangeRateModel();
+            //    exchangeRateDailyModel.Date = date;
+            //    exchangeRateModel.Currency = currency;
+            //    exchangeRateModel.ExchangeRate = excangeRate;
+
+            //    exchangeRateDailyModels.Add(exchangeRateDailyModel);
+            //}
+            #endregion
+
+            //for (int i = 1; i < exchangeRateDailyModels.Count; i++)
+            //{
+            //    DataSet ds = new DataSet();
+            //    ds.rowexchangeRatesTable.Rows.Add(new DataRow());
+            //    exchangeRatesTable.Rows[i]["Datum"] = exchangeRateDailyModels[i].Date;
+            //    exchangeRatesTable.Rows[i][exchangeRateDailyModels[i].ExchangeRate.Currency] =
+            //        exchangeRateDailyModels[i].ExchangeRate.ExchangeRate;
+            //}
+
+            List<ExchangeRateDailyModel> exchangeRateDailyModels= new List<ExchangeRateDailyModel>();
+
+            XmlReader rdr = XmlReader.Create(new StringReader(exchangeRates.GetExchangeRatesResult));
+            while (rdr.Read())
+            {
+                if (rdr.NodeType == XmlNodeType.Element)
+                {
+                    if (rdr.LocalName == "Day")
+                    {
+                        Console.WriteLine("Day");
+                        Console.WriteLine("Attribute count: "+rdr.GetAttribute("date"));
+                    }
+                }
+
+                //Console.WriteLine("NodeType: "+ rdr.NodeType);
+                //if (rdr.NodeType == XmlNodeType.Element)
+                //{
+                //   // Console.WriteLine("node while: "+rdr.LocalName);
+                //}
+            }
+
 
             string exchangeRatesXMLString = XElement.Parse(exchangeRates.GetExchangeRatesResult).ToString();
-            
+            XmlReader xmlReader = XmlReader.Create(new StringReader(exchangeRates.GetExchangeRatesResult));
             Console.WriteLine();
             Console.WriteLine("exchangeRatesXMLString: ");
             Console.WriteLine();
             Console.WriteLine(exchangeRatesXMLString);
 
+            StringReader stringReader = new StringReader(exchangeRates.GetExchangeRatesResult);
+            DataSet dataSet = new DataSet();
+            dataSet.ReadXml(stringReader);
+
+            
+
             client.Close();
 
             Console.ReadLine();
 
-        }       
+        }        
     }
 }
