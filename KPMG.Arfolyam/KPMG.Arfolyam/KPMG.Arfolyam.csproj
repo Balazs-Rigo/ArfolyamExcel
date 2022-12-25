@@ -50,6 +50,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Compile>
+    <Compile Include="CurrencyUnitModel.cs" />
     <Compile Include="ExchangeRateModel.cs" />
     <Compile Include="ExchangeRateDailyModel.cs" />
     <Compile Include="Program.cs" />
