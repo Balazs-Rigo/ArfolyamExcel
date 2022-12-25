@@ -55,7 +55,7 @@ namespace KPMG.Arfolyam
 
             exchangeRatesRequestBody.startDate = "2015-10-01";
             exchangeRatesRequestBody.endDate = "2015-10-07";
-            exchangeRatesRequestBody.currencyNames = string.Join(",",currencyList.Take(10));
+            exchangeRatesRequestBody.currencyNames = string.Join(",",currencyList.Take(15));
 
             var exchangeRates = client.GetExchangeRates(exchangeRatesRequestBody);
 
@@ -147,17 +147,26 @@ namespace KPMG.Arfolyam
             #endregion
 
             DataTable dataTable = new DataTable();
-            dataTable.Columns.Add("Datum");
+            dataTable.Columns.Add("Datum/ISO");            
+
             foreach (var currency in currencyList)
             {
                 dataTable.Columns.Add(currency);
             }
 
-            i = 0;
+            dataTable.Rows.Add();
+            dataTable.Rows[0][0] = "Egység";
+
+            foreach (var currenciesUnit in currencyUnitsList)
+            {
+                dataTable.Rows[0][currenciesUnit.Currency] = currenciesUnit.Unit;
+            }
+
+            i = 1;
             foreach (var dailyModel in exchangeRateDailyModels)
             {
                 dataTable.Rows.Add();
-                dataTable.Rows[i]["Datum"] = dailyModel.Date;
+                dataTable.Rows[i]["Datum/ISO"] = dailyModel.Date;
 
                 foreach (var exchangeRate in dailyModel.ExchangeRate)
                 {
