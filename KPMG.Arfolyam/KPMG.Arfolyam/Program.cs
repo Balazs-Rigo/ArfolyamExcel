@@ -56,7 +56,7 @@ namespace KPMG.Arfolyam
 
             exchangeRatesRequestBody.startDate = "2015-10-01";
             exchangeRatesRequestBody.endDate = "2015-10-5";
-            exchangeRatesRequestBody.currencyNames = string.Join(",",currencyList.Take(3));
+            exchangeRatesRequestBody.currencyNames = string.Join(",",currencyList.Take(10));
 
             var exchangeRates = client.GetExchangeRates(exchangeRatesRequestBody);
 
@@ -111,15 +111,50 @@ namespace KPMG.Arfolyam
             List<ExchangeRateDailyModel> exchangeRateDailyModels= new List<ExchangeRateDailyModel>();
 
             XmlReader rdr = XmlReader.Create(new StringReader(exchangeRates.GetExchangeRatesResult));
+            ExchangeRateDailyModel exchangeRateDailyModel = null;
+            ExchangeRateModel exchangeRateModel = null;
+            int i = 0;
             while (rdr.Read())
             {
-                if (rdr.NodeType == XmlNodeType.Element)
+                
+                if (rdr.NodeType == XmlNodeType.Element && rdr.LocalName == "Day")
                 {
-                    if (rdr.LocalName == "Day")
-                    {
+                        exchangeRateDailyModel = new ExchangeRateDailyModel();
+                        exchangeRateDailyModel.Date = rdr.GetAttribute("date");
                         Console.WriteLine("Day");
                         Console.WriteLine("Attribute count: "+rdr.GetAttribute("date"));
-                    }
+                }
+
+                if (rdr.NodeType == XmlNodeType.Element && rdr.LocalName == "Rate")
+                {
+                    exchangeRateModel =new ExchangeRateModel();
+                    exchangeRateModel.Currency = rdr.GetAttribute("curr");
+                    //exchangeRateDailyModel.ExchangeRate.Add(new ExchangeRateModel
+                    //{
+                    //    Currency = rdr.GetAttribute("curr"),
+                    //});      
+                }
+
+                if (rdr.NodeType == XmlNodeType.Text)
+                {
+                    exchangeRateModel.ExchangeRate = rdr.Value;
+                   // exchangeRateDailyModel.ExchangeRate[i].ExchangeRate = rdr.Value;
+                    //i++;
+                }
+
+                if (rdr.NodeType == XmlNodeType.EndElement && rdr.LocalName == "Rate")
+                {
+                    ExchangeRateModel finalExchangeRateModel = new ExchangeRateModel();
+                    finalExchangeRateModel.Currency = exchangeRateModel.Currency;
+                    finalExchangeRateModel.ExchangeRate = exchangeRateModel.ExchangeRate;
+                    exchangeRateDailyModel.ExchangeRate.Add(finalExchangeRateModel);
+                    i++;
+                }
+
+                if (rdr.NodeType == XmlNodeType.EndElement && rdr.LocalName == "Day")
+                {
+                    exchangeRateDailyModels.Add(exchangeRateDailyModel);
+                    i = 0;
                 }
 
                 //Console.WriteLine("NodeType: "+ rdr.NodeType);
