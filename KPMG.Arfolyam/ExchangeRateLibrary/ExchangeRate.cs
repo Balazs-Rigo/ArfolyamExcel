@@ -1,13 +1,15 @@
-﻿using KPMG.Arfolyam.Excel.MNBArfolyamServiceSoapClient;
+﻿using ExchangeRateLibrary.MNBArfolyamServiceSoapClient;
+using ExchangeRateLibrary.Models;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using System.Xml;
-using KPMG.Arfolyam.Excel.Models;
 
-namespace KPMG.Arfolyam.Excel
+namespace ExchangeRateLibrary
 {
     public class ExchangeRate
     {
@@ -20,9 +22,9 @@ namespace KPMG.Arfolyam.Excel
 
         public DataTable GetExchangeRates(string startDate, string endDate, int numberOfCurrencies)
         {
-            if (!IsValidDates(startDate,endDate))
+            if (!IsValidDates(startDate, endDate))
                 throw new ArgumentException("A kezdő vagy a vég dátum nem megfelelő formátumban van! A helyes formátum: yyyy-MM-dd");
-          
+
 
             DataTable output = CreateDatatable();
 
@@ -63,7 +65,7 @@ namespace KPMG.Arfolyam.Excel
 
             var currenciesRequestBody = new GetCurrenciesRequestBody();
 
-            var currencies = _MNBArfolyamServiceSoap.GetCurrencies(currenciesRequestBody);            
+            var currencies = _MNBArfolyamServiceSoap.GetCurrencies(currenciesRequestBody);
 
             output = LoadCurrenciesToList(currencies.GetCurrenciesResult);
 
@@ -98,7 +100,7 @@ namespace KPMG.Arfolyam.Excel
 
             output = LoadCurrencyUnitsToList(currencyUnits);
 
-            return output; 
+            return output;
         }
 
         private List<CurrencyUnitModel> LoadCurrencyUnitsToList(string currencyUnits)
@@ -140,7 +142,7 @@ namespace KPMG.Arfolyam.Excel
 
             exchangeRatesRequestBody.startDate = startDate;
             exchangeRatesRequestBody.endDate = endDate;
-            exchangeRatesRequestBody.currencyNames = string.Join(",", GetCurrencies().Take(numberOfCurrencies+1));
+            exchangeRatesRequestBody.currencyNames = string.Join(",", GetCurrencies().Take(numberOfCurrencies + 1));
 
             var exchangeRates = _MNBArfolyamServiceSoap
                             .GetExchangeRates(exchangeRatesRequestBody).GetExchangeRatesResult;

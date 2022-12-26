@@ -5,6 +5,8 @@ VisualStudioVersion = 17.4.33205.214
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KPMG.Arfolyam.Excel", "KPMG.Arfolyam.Excel\KPMG.Arfolyam.Excel.csproj", "{103CA428-8A6D-4999-9694-A55AB6079A8B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExchangeRateLibrary", "ExchangeRateLibrary\ExchangeRateLibrary.csproj", "{C276A623-8889-434F-8E31-3B30DC53E07E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{103CA428-8A6D-4999-9694-A55AB6079A8B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{103CA428-8A6D-4999-9694-A55AB6079A8B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{103CA428-8A6D-4999-9694-A55AB6079A8B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C276A623-8889-434F-8E31-3B30DC53E07E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C276A623-8889-434F-8E31-3B30DC53E07E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C276A623-8889-434F-8E31-3B30DC53E07E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C276A623-8889-434F-8E31-3B30DC53E07E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

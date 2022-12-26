@@ -1,0 +1,7 @@
+I:\IT\Coding\gitHubRepo\KPMG\KPMG.Arfolyam\ExchangeRateLibrary\bin\Debug\ExchangeRateLibrary.dll.config
+I:\IT\Coding\gitHubRepo\KPMG\KPMG.Arfolyam\ExchangeRateLibrary\bin\Debug\ExchangeRateLibrary.dll
+I:\IT\Coding\gitHubRepo\KPMG\KPMG.Arfolyam\ExchangeRateLibrary\bin\Debug\ExchangeRateLibrary.pdb
+I:\IT\Coding\gitHubRepo\KPMG\KPMG.Arfolyam\ExchangeRateLibrary\obj\Debug\ExchangeRateLibrary.csproj.AssemblyReference.cache
+I:\IT\Coding\gitHubRepo\KPMG\KPMG.Arfolyam\ExchangeRateLibrary\obj\Debug\ExchangeRateLibrary.csproj.CoreCompileInputs.cache
+I:\IT\Coding\gitHubRepo\KPMG\KPMG.Arfolyam\ExchangeRateLibrary\obj\Debug\ExchangeRateLibrary.dll
+I:\IT\Coding\gitHubRepo\KPMG\KPMG.Arfolyam\ExchangeRateLibrary\obj\Debug\ExchangeRateLibrary.pdb

@@ -7,6 +7,8 @@ using System.Data.OleDb;
 using Microsoft.Office.Interop.Excel;
 using System.Text;
 using System.Diagnostics;
+using ExchangeRateLibrary;
+using ExchangeRateLibrary.MNBArfolyamServiceSoapClient;
 
 namespace KPMG.Arfolyam.Excel
 {
@@ -20,9 +22,9 @@ namespace KPMG.Arfolyam.Excel
 
         private void btnGetExchangeUnits_Click(object sender, RibbonControlEventArgs e)
         {
-            ExchangeRate exchangeRate = new ExchangeRate(new MNBArfolyamServiceSoapClient.MNBArfolyamServiceSoapClient());
+            ExchangeRate exchangeRate = new ExchangeRate(new ExchangeRateLibrary.MNBArfolyamServiceSoapClient.MNBArfolyamServiceSoapClient());
 
-            System.Data.DataTable dataTable = exchangeRate.GetExchangeRates("2020-01-01", "2021-01-01", 14);
+            System.Data.DataTable dataTable = exchangeRate.GetExchangeRates("2015-01-01", "2020-04-01", 14);
 
             LoadExchangeRatesToExcelWorksheet(dataTable);
             
