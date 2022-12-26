@@ -5,6 +5,7 @@ using System.Data;
 using System.IO;
 using System.Linq;
 using System.Xml;
+using KPMG.Arfolyam.Excel.Models;
 
 namespace KPMG.Arfolyam.Excel
 {
