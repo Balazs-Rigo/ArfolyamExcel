@@ -1,0 +1,17 @@
+I:\IT\Coding\gitHubRepo\KPMG\KPMG.Arfolyam\KPMG.Arfolyam.Excel\bin\Debug\KPMG.Arfolyam.Excel.dll.config
+I:\IT\Coding\gitHubRepo\KPMG\KPMG.Arfolyam\KPMG.Arfolyam.Excel\bin\Debug\KPMG.Arfolyam.Excel.dll
+I:\IT\Coding\gitHubRepo\KPMG\KPMG.Arfolyam\KPMG.Arfolyam.Excel\bin\Debug\KPMG.Arfolyam.Excel.pdb
+I:\IT\Coding\gitHubRepo\KPMG\KPMG.Arfolyam\KPMG.Arfolyam.Excel\bin\Debug\KPMG.Arfolyam.Excel.dll.manifest
+I:\IT\Coding\gitHubRepo\KPMG\KPMG.Arfolyam\KPMG.Arfolyam.Excel\bin\Debug\KPMG.Arfolyam.Excel.vsto
+I:\IT\Coding\gitHubRepo\KPMG\KPMG.Arfolyam\KPMG.Arfolyam.Excel\bin\Debug\ExchangeRateLibrary.dll
+I:\IT\Coding\gitHubRepo\KPMG\KPMG.Arfolyam\KPMG.Arfolyam.Excel\bin\Debug\Microsoft.Office.Tools.Common.v4.0.Utilities.dll
+I:\IT\Coding\gitHubRepo\KPMG\KPMG.Arfolyam\KPMG.Arfolyam.Excel\bin\Debug\ExchangeRateLibrary.pdb
+I:\IT\Coding\gitHubRepo\KPMG\KPMG.Arfolyam\KPMG.Arfolyam.Excel\bin\Debug\ExchangeRateLibrary.dll.config
+I:\IT\Coding\gitHubRepo\KPMG\KPMG.Arfolyam\KPMG.Arfolyam.Excel\obj\Debug\KPMG.Arfolyam.Excel.csproj.AssemblyReference.cache
+I:\IT\Coding\gitHubRepo\KPMG\KPMG.Arfolyam\KPMG.Arfolyam.Excel\obj\Debug\KPMG.Arfolyam.Excel.BalazsRibbon.resources
+I:\IT\Coding\gitHubRepo\KPMG\KPMG.Arfolyam\KPMG.Arfolyam.Excel\obj\Debug\KPMG.Arfolyam.Excel.Properties.Resources.resources
+I:\IT\Coding\gitHubRepo\KPMG\KPMG.Arfolyam\KPMG.Arfolyam.Excel\obj\Debug\KPMG.Arfolyam.Excel.csproj.GenerateResource.cache
+I:\IT\Coding\gitHubRepo\KPMG\KPMG.Arfolyam\KPMG.Arfolyam.Excel\obj\Debug\KPMG.Arfolyam.Excel.csproj.CoreCompileInputs.cache
+I:\IT\Coding\gitHubRepo\KPMG\KPMG.Arfolyam\KPMG.Arfolyam.Excel\obj\Debug\KPMG.Arfolyam.Excel.csproj.CopyComplete
+I:\IT\Coding\gitHubRepo\KPMG\KPMG.Arfolyam\KPMG.Arfolyam.Excel\obj\Debug\KPMG.Arfolyam.Excel.dll
+I:\IT\Coding\gitHubRepo\KPMG\KPMG.Arfolyam\KPMG.Arfolyam.Excel\obj\Debug\KPMG.Arfolyam.Excel.pdb

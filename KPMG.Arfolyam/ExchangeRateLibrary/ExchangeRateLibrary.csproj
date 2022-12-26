@@ -48,6 +48,9 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Compile>
+    <Compile Include="Constans\TableConstans.cs" />
+    <Compile Include="Constans\XMLAttributeConstans.cs" />
+    <Compile Include="Constans\XMLNodeConstans.cs" />
     <Compile Include="ExchangeRate.cs" />
     <Compile Include="Models\CurrencyUnitModel.cs" />
     <Compile Include="Models\ExchangeRateDailyModel.cs" />
