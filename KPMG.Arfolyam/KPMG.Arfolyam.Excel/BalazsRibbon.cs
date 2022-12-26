@@ -20,29 +20,13 @@ namespace KPMG.Arfolyam.Excel
 
         private void btnGetExchangeUnits_Click(object sender, RibbonControlEventArgs e)
         {
-            Stopwatch watch = new Stopwatch();
-
-            watch.Start();
-
             ExchangeRate exchangeRate = new ExchangeRate(new MNBArfolyamServiceSoapClient.MNBArfolyamServiceSoapClient());
 
-            System.Data.DataTable dataTable = exchangeRate.GetExchangeRates("2020-01-01", "2021-01-10", 14);
+            System.Data.DataTable dataTable = exchangeRate.GetExchangeRates("2020-01-01", "2021-01-01", 14);
 
             LoadExchangeRatesToExcelWorksheet(dataTable);
-
-            watch.Stop();
-
-            TimeSpan ts = watch.Elapsed;
-
-            string elapsedTime = String.Format("{0:00}:{1:00}:{2:00}.{3:00}",
-            ts.Hours, ts.Minutes, ts.Seconds,
-            ts.Milliseconds / 10);
-
-            //MessageBox.Show(elapsedTime);
-
-            //LogActivity();
-
-           
+            
+            //LogActivity();           
         }
 
         private void LoadExchangeRatesToExcelWorksheet(System.Data.DataTable data)
