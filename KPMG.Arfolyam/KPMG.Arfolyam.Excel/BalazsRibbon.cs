@@ -1,16 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Data;
 using Microsoft.Office.Tools.Ribbon;
 using System.Windows.Forms;
 using System.IO;
-using System.Xml.Linq;
-using System.Xml;
-using KPMG.Arfolyam.Excel.MNBArfolyamServiceSoapClient;
 using System.Data.OleDb;
 using Microsoft.Office.Interop.Excel;
-using DataTable = System.Data.DataTable;
+using System.Text;
+using System.Diagnostics;
 
 namespace KPMG.Arfolyam.Excel
 {
@@ -24,35 +20,80 @@ namespace KPMG.Arfolyam.Excel
 
         private void btnGetExchangeUnits_Click(object sender, RibbonControlEventArgs e)
         {
+            Stopwatch watch = new Stopwatch();
+
+            watch.Start();
+
             ExchangeRate exchangeRate = new ExchangeRate(new MNBArfolyamServiceSoapClient.MNBArfolyamServiceSoapClient());
 
-            DataTable dataTable = exchangeRate.GetExchangeRates("2017-03-11", "2017-03-27", 5);
+            System.Data.DataTable dataTable = exchangeRate.GetExchangeRates("2020-01-01", "2021-01-10", 14);
 
             LoadExchangeRatesToExcelWorksheet(dataTable);
 
-            LogActivity();
+            watch.Stop();
+
+            TimeSpan ts = watch.Elapsed;
+
+            string elapsedTime = String.Format("{0:00}:{1:00}:{2:00}.{3:00}",
+            ts.Hours, ts.Minutes, ts.Seconds,
+            ts.Milliseconds / 10);
+
+            //MessageBox.Show(elapsedTime);
+
+            //LogActivity();
 
            
         }
 
-        private void LoadExchangeRatesToExcelWorksheet(DataTable data)
+        private void LoadExchangeRatesToExcelWorksheet(System.Data.DataTable data)
         {
             Microsoft.Office.Tools.Excel.Worksheet worksheet =
                   Globals.Factory
                   .GetVstoObject(Globals.ThisAddIn.Application.ActiveWorkbook.Worksheets[1]);
 
-            for (int n = 0; n < data.Columns.Count; n++)
+            for (int i = 0; i < data.Columns.Count; i++)
             {
-                worksheet.Cells[1, n + 1] = data.Columns[n].ColumnName;
+                worksheet.Cells[1, i + 1] = data.Columns[i].ColumnName;
             }
 
-            for (int n = 0; n < data.Rows.Count; n++)
+            StringBuilder stringBuilder = new StringBuilder();
+            double numberValue;
+
+            for (int i = 0; i < data.Rows.Count; i++)
             {
                 for (int j = 0; j < data.Columns.Count; j++)
                 {
-                    worksheet.Cells[n + 2, j + 1] = data.Rows[n][j].ToString();
+
+                    var currentValue = stringBuilder.Append(data.Rows[i][j].ToString()).ToString();
+
+                    if (string.IsNullOrEmpty(currentValue) && j != 1)
+                    {
+                        break;
+                    }
+
+                    bool isValueNumber = double.TryParse(currentValue.ToString(), out numberValue);
+
+                    if (isValueNumber)
+                    {
+                        worksheet.Cells[i + 2, j + 1] = numberValue;
+
+                    }
+                    else
+                    {
+                        worksheet.Cells[i + 2, j + 1] = currentValue;
+                    }                  
+                    stringBuilder.Clear();
                 }
             }
+
+            //Range r = (Range)worksheet.Cells[4, 4];
+            //r.EntireColumn.NumberFormat = "0.0";
+
+            //Range d = (Range)worksheet.Cells[3, 1];
+            //d.EntireColumn.NumberFormat = "YYYY.MMMM.DD";  // date
+
+
+            //r.NumberFormat = "$0.00"; // currency
         }
 
         private void LogActivity()

@@ -15,12 +15,14 @@ namespace KPMG.Arfolyam.Excel
         public ExchangeRate(MNBArfolyamServiceSoapClient.MNBArfolyamServiceSoapClient service)
         {
             _MNBArfolyamServiceSoap = service;
-
-            GetExchangeRates("2020-01-01", "2020-01-10", 10);
         }
 
         public DataTable GetExchangeRates(string startDate, string endDate, int numberOfCurrencies)
         {
+            if (!IsValidDates(startDate,endDate))
+                throw new ArgumentException("A kezdő vagy a vég dátum nem megfelelő formátumban van! A helyes formátum: yyyy-MM-dd");
+          
+
             DataTable output = CreateDatatable();
 
             int i = 1;
@@ -37,6 +39,21 @@ namespace KPMG.Arfolyam.Excel
             }
 
             return output;
+        }
+
+        private bool IsValidDates(string startDate, string endDate)
+        {
+            string format = "yyyy-MM-dd";
+            DateTime start;
+            DateTime end;
+
+            bool isStartValid = DateTime.TryParseExact(startDate, format, null, System.Globalization.DateTimeStyles.None, out start);
+            bool isEndValid = DateTime.TryParseExact(endDate, format, null, System.Globalization.DateTimeStyles.None, out end);
+
+            if (start > end)
+                throw new ArgumentException("A kezdődátum nem lehet nagyobb, mint a végdátum.");
+
+            return isStartValid && isEndValid;
         }
 
         private List<string> GetCurrencies()

@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.4.33205.214
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KPMG.Arfolyam", "KPMG.Arfolyam\KPMG.Arfolyam.csproj", "{6A15CBD6-1DCE-438E-AE9D-F902D600FD6B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KPMG.Arfolyam.Excel", "KPMG.Arfolyam.Excel\KPMG.Arfolyam.Excel.csproj", "{103CA428-8A6D-4999-9694-A55AB6079A8B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,10 +11,10 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{6A15CBD6-1DCE-438E-AE9D-F902D600FD6B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6A15CBD6-1DCE-438E-AE9D-F902D600FD6B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6A15CBD6-1DCE-438E-AE9D-F902D600FD6B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6A15CBD6-1DCE-438E-AE9D-F902D600FD6B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{103CA428-8A6D-4999-9694-A55AB6079A8B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{103CA428-8A6D-4999-9694-A55AB6079A8B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{103CA428-8A6D-4999-9694-A55AB6079A8B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{103CA428-8A6D-4999-9694-A55AB6079A8B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
