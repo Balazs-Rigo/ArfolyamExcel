@@ -1,8 +1,0 @@
-I:\IT\Coding\gitHubRepo\KPMG\KPMG.Arfolyam\KPMG.Arfolyam\bin\Debug\KPMG.Arfolyam.exe.config
-I:\IT\Coding\gitHubRepo\KPMG\KPMG.Arfolyam\KPMG.Arfolyam\bin\Debug\KPMG.Arfolyam.exe
-I:\IT\Coding\gitHubRepo\KPMG\KPMG.Arfolyam\KPMG.Arfolyam\bin\Debug\KPMG.Arfolyam.pdb
-I:\IT\Coding\gitHubRepo\KPMG\KPMG.Arfolyam\KPMG.Arfolyam\obj\Debug\KPMG.Arfolyam.csproj.AssemblyReference.cache
-I:\IT\Coding\gitHubRepo\KPMG\KPMG.Arfolyam\KPMG.Arfolyam\obj\Debug\KPMG.Arfolyam.csproj.SuggestedBindingRedirects.cache
-I:\IT\Coding\gitHubRepo\KPMG\KPMG.Arfolyam\KPMG.Arfolyam\obj\Debug\KPMG.Arfolyam.csproj.CoreCompileInputs.cache
-I:\IT\Coding\gitHubRepo\KPMG\KPMG.Arfolyam\KPMG.Arfolyam\obj\Debug\KPMG.Arfolyam.exe
-I:\IT\Coding\gitHubRepo\KPMG\KPMG.Arfolyam\KPMG.Arfolyam\obj\Debug\KPMG.Arfolyam.pdb

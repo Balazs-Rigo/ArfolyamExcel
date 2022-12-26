@@ -1,30 +1,34 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Data;
-using Microsoft.Office.Interop.Excel;
 using Microsoft.Office.Tools.Ribbon;
-using Microsoft.Office.Tools.Excel;
 using System.Windows.Forms;
 using System.IO;
 using System.Xml.Linq;
 using System.Xml;
 using KPMG.Arfolyam.Excel.MNBArfolyamServiceSoapClient;
+using System.Data.OleDb;
 
 namespace KPMG.Arfolyam.Excel
 {
     public partial class BalazsRibbon
     {
+        OleDbConnection conn = null;
         private void BalazsRibbon_Load(object sender, RibbonUIEventArgs e)
         {
-
+            conn = new OleDbConnection(@"Provider=Microsoft.ACE.OLEDB.12.0;Data Source=I:\IT\Coding\gitHubRepo\KPMG\KPMG.Arfolyam\KPMG.Arfolyam.Excel\ExchangeRates.accdb");
         }
 
         private void btnGetExchangeUnits_Click(object sender, RibbonControlEventArgs e)
         {
-            
 
+            ExchangeRate exchangeRate1 = new ExchangeRate(new MNBArfolyamServiceSoapClient.MNBArfolyamServiceSoapClient());
+
+
+
+            
+            #region full program
             using (MNBArfolyamServiceSoapClient.MNBArfolyamServiceSoapClient client = new MNBArfolyamServiceSoapClient.MNBArfolyamServiceSoapClient())
             {
                 client.Open();
@@ -53,16 +57,16 @@ namespace KPMG.Arfolyam.Excel
 
                 var currencyUnits = client.GetCurrencyUnits(currencyUnitsRequestBody);
 
-                System.Data.DataTable exchangeRatesTable = new System.Data.DataTable();
-                exchangeRatesTable.Columns.Add("Datum", typeof(string));
+                //System.Data.DataTable exchangeRatesTable = new System.Data.DataTable();
+                //exchangeRatesTable.Columns.Add("Datum", typeof(string));
 
-                foreach (var currency in currencyList)
-                {
-                    exchangeRatesTable.Columns.Add(currency, typeof(string));
-                }
+                //foreach (var currency in currencyList)
+                //{
+                //    exchangeRatesTable.Columns.Add(currency, typeof(string));
+                //}
 
-                exchangeRatesRequestBody.startDate = "2015-10-01";
-                exchangeRatesRequestBody.endDate = "2015-11-01";
+                exchangeRatesRequestBody.startDate = "2015-01-01";
+                exchangeRatesRequestBody.endDate = "2015-01-06";
                 exchangeRatesRequestBody.currencyNames = string.Join(",", currencyList.Take(15));
 
                 var exchangeRates = client.GetExchangeRates(exchangeRatesRequestBody);
@@ -211,11 +215,18 @@ namespace KPMG.Arfolyam.Excel
                         worksheet.Cells[n + 2, j + 1] = dataTable.Rows[n][j].ToString();
                     }
                 }
-            }
-
+                var timestamp = new DateTimeOffset(DateTime.UtcNow).ToUnixTimeSeconds();
+                MessageBox.Show(timestamp.ToString());
+                conn.Open();
+                OleDbCommand cmd = conn.CreateCommand();
+                cmd.CommandType = CommandType.Text;
+                cmd.CommandText = $"insert into ExchangeRateAccessDB (UserName, Indoklas)" +
+                    $" values ('{Environment.UserName}','indoklas teszt from code')";
+                cmd.ExecuteNonQuery();
+                conn.Close();
+                #endregion
             
-
-
+            }
         }
     }
 }
