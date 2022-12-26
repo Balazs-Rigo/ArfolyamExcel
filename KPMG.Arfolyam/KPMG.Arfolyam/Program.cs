@@ -1,4 +1,5 @@
-﻿using KPMG.Arfolyam.MNBArfolyamServiceSoapClient;
+﻿using ClosedXML.Excel;
+using KPMG.Arfolyam.MNBArfolyamServiceSoapClient;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -173,7 +174,8 @@ namespace KPMG.Arfolyam
                     dataTable.Rows[i][exchangeRate.Currency] = exchangeRate.ExchangeRate;
                 }
                 i++;
-            }         
+            }
+
 
             string exchangeRatesXMLString = XElement.Parse(exchangeRates.GetExchangeRatesResult).ToString();
             XmlReader xmlReader = XmlReader.Create(new StringReader(exchangeRates.GetExchangeRatesResult));
