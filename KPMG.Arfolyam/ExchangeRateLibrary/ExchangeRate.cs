@@ -79,11 +79,15 @@ namespace ExchangeRateLibrary
             XmlDocument xml = new XmlDocument();
             xml.LoadXml(currencies);
 
-            XmlNodeList xnList = xml.SelectNodes("/MNBCurrencies/Currencies/Curr");
-            foreach (XmlNode xn in xnList)
-            {
-                output.Add(xn.InnerText);
+            using (XmlNodeList xnList = xml.SelectNodes("/MNBCurrencies/Currencies/Curr"))
+            {                
+                foreach (XmlNode xn in xnList)
+                {
+                    output.Add(xn.InnerText);
+                }
             }
+
+            
 
             return output;
         }
@@ -107,30 +111,34 @@ namespace ExchangeRateLibrary
         {
             List<CurrencyUnitModel> currencyUnitsList = new List<CurrencyUnitModel>();
 
-            XmlReader rdr = XmlReader.Create(new StringReader(currencyUnits));
-            CurrencyUnitModel currencyUnitModel = null;
-            while (rdr.Read())
+            using (XmlReader rdr = XmlReader.Create(new StringReader(currencyUnits)))
             {
-
-                if (rdr.NodeType == XmlNodeType.Element && rdr.LocalName == "Unit")
+                CurrencyUnitModel currencyUnitModel = null;
+                while (rdr.Read())
                 {
-                    currencyUnitModel = new CurrencyUnitModel();
-                    currencyUnitModel.Currency = rdr.GetAttribute("curr");
-                }
 
-                if (rdr.NodeType == XmlNodeType.Text)
-                {
-                    currencyUnitModel.Unit = rdr.Value;
-                }
+                    if (rdr.NodeType == XmlNodeType.Element && rdr.LocalName == "Unit")
+                    {
+                        currencyUnitModel = new CurrencyUnitModel();
+                        currencyUnitModel.Currency = rdr.GetAttribute("curr");
+                    }
 
-                if (rdr.NodeType == XmlNodeType.EndElement && rdr.LocalName == "Unit")
-                {
-                    CurrencyUnitModel finalCurrencyUnitModel = new CurrencyUnitModel();
-                    finalCurrencyUnitModel.Currency = currencyUnitModel.Currency;
-                    finalCurrencyUnitModel.Unit = currencyUnitModel.Unit;
-                    currencyUnitsList.Add(finalCurrencyUnitModel);
+                    if (rdr.NodeType == XmlNodeType.Text)
+                    {
+                        currencyUnitModel.Unit = rdr.Value;
+                    }
+
+                    if (rdr.NodeType == XmlNodeType.EndElement && rdr.LocalName == "Unit")
+                    {
+                        CurrencyUnitModel finalCurrencyUnitModel = new CurrencyUnitModel();
+                        finalCurrencyUnitModel.Currency = currencyUnitModel.Currency;
+                        finalCurrencyUnitModel.Unit = currencyUnitModel.Unit;
+                        currencyUnitsList.Add(finalCurrencyUnitModel);
+                    }
                 }
             }
+
+            
             return currencyUnitsList;
         }
 
@@ -156,45 +164,47 @@ namespace ExchangeRateLibrary
         {
             List<ExchangeRateDailyModel> output = new List<ExchangeRateDailyModel>();
 
-            XmlReader rdr = XmlReader.Create(new StringReader(exchangeRates));
-            ExchangeRateDailyModel exchangeRateDailyModel = null;
-            ExchangeRateModel exchangeRateModel = null;
-            int i = 0;
-            while (rdr.Read())
+            using (XmlReader rdr = XmlReader.Create(new StringReader(exchangeRates)))
             {
-
-                if (rdr.NodeType == XmlNodeType.Element && rdr.LocalName == "Day")
+                ExchangeRateDailyModel exchangeRateDailyModel = null;
+                ExchangeRateModel exchangeRateModel = null;
+                int i = 0;
+                while (rdr.Read())
                 {
-                    exchangeRateDailyModel = new ExchangeRateDailyModel();
-                    exchangeRateDailyModel.Date = rdr.GetAttribute("date");
-                }
 
-                if (rdr.NodeType == XmlNodeType.Element && rdr.LocalName == "Rate")
-                {
-                    exchangeRateModel = new ExchangeRateModel();
-                    exchangeRateModel.Currency = rdr.GetAttribute("curr");
-                }
+                    if (rdr.NodeType == XmlNodeType.Element && rdr.LocalName == "Day")
+                    {
+                        exchangeRateDailyModel = new ExchangeRateDailyModel();
+                        exchangeRateDailyModel.Date = rdr.GetAttribute("date");
+                    }
 
-                if (rdr.NodeType == XmlNodeType.Text)
-                {
-                    exchangeRateModel.ExchangeRate = rdr.Value;
-                }
+                    if (rdr.NodeType == XmlNodeType.Element && rdr.LocalName == "Rate")
+                    {
+                        exchangeRateModel = new ExchangeRateModel();
+                        exchangeRateModel.Currency = rdr.GetAttribute("curr");
+                    }
 
-                if (rdr.NodeType == XmlNodeType.EndElement && rdr.LocalName == "Rate")
-                {
-                    ExchangeRateModel finalExchangeRateModel = new ExchangeRateModel();
-                    finalExchangeRateModel.Currency = exchangeRateModel.Currency;
-                    finalExchangeRateModel.ExchangeRate = exchangeRateModel.ExchangeRate;
-                    exchangeRateDailyModel.ExchangeRate.Add(finalExchangeRateModel);
-                    i++;
-                }
+                    if (rdr.NodeType == XmlNodeType.Text)
+                    {
+                        exchangeRateModel.ExchangeRate = rdr.Value;
+                    }
 
-                if (rdr.NodeType == XmlNodeType.EndElement && rdr.LocalName == "Day")
-                {
-                    output.Add(exchangeRateDailyModel);
-                    i = 0;
+                    if (rdr.NodeType == XmlNodeType.EndElement && rdr.LocalName == "Rate")
+                    {
+                        ExchangeRateModel finalExchangeRateModel = new ExchangeRateModel();
+                        finalExchangeRateModel.Currency = exchangeRateModel.Currency;
+                        finalExchangeRateModel.ExchangeRate = exchangeRateModel.ExchangeRate;
+                        exchangeRateDailyModel.ExchangeRate.Add(finalExchangeRateModel);
+                        i++;
+                    }
+
+                    if (rdr.NodeType == XmlNodeType.EndElement && rdr.LocalName == "Day")
+                    {
+                        output.Add(exchangeRateDailyModel);
+                        i = 0;
+                    }
                 }
-            }
+            }           
 
             return output;
         }
