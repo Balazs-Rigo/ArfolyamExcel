@@ -20,11 +20,11 @@ namespace KPMG.Arfolyam.Excel
             conn = new OleDbConnection($@"Provider=Microsoft.ACE.OLEDB.12.0;Data Source={Directory.GetCurrentDirectory()}\ExchangeRates.accdb");
         }
 
-        private void btnGetExchangeUnits_Click(object sender, RibbonControlEventArgs e)
+        private void BtnGetExchangeUnits_Click(object sender, RibbonControlEventArgs e)
         {
             ExchangeRate exchangeRate = new ExchangeRate(new ExchangeRateLibrary.MNBArfolyamServiceSoapClient.MNBArfolyamServiceSoapClient());
 
-            System.Data.DataTable dataTable = exchangeRate.GetExchangeRates("2015-01-01", "2020-04-01", 14);
+            System.Data.DataTable dataTable = exchangeRate.GetExchangeRates("2015-01-01", "2020-04-01", 10);
 
             LoadExchangeRatesToExcelWorksheet(dataTable);
             

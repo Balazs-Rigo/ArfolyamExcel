@@ -1,4 +1,5 @@
-﻿using ExchangeRateLibrary.MNBArfolyamServiceSoapClient;
+﻿using ExchangeRateLibrary.Constans;
+using ExchangeRateLibrary.MNBArfolyamServiceSoapClient;
 using ExchangeRateLibrary.Models;
 using System;
 using System.Collections.Generic;
@@ -20,6 +21,12 @@ namespace ExchangeRateLibrary
             _MNBArfolyamServiceSoap = service;
         }
 
+        /// <summary>
+        /// Egy Datatable-ban visszaadja a valuta árfolyamait adott időintervallumban
+        /// </summary>
+        /// <param name="startDate">Mikortól szeretném a lekérdezést.</param>
+        /// <param name="endDate">Meddig szeretném a lekérdezést.</param>
+        /// /// <param name="numberOfCurrencies">Hány valutát szeretnék lekérdezni.</param>
         public DataTable GetExchangeRates(string startDate, string endDate, int numberOfCurrencies)
         {
             if (!IsValidDates(startDate, endDate))
@@ -32,7 +39,7 @@ namespace ExchangeRateLibrary
             foreach (var dailyModel in GetExchangeRates(numberOfCurrencies, startDate, endDate))
             {
                 output.Rows.Add();
-                output.Rows[i]["Datum/ISO"] = dailyModel.Date;
+                output.Rows[i][TableConstans.Datum] = dailyModel.Date;
 
                 foreach (var exchangeRate in dailyModel.ExchangeRate)
                 {
@@ -47,11 +54,9 @@ namespace ExchangeRateLibrary
         private bool IsValidDates(string startDate, string endDate)
         {
             string format = "yyyy-MM-dd";
-            DateTime start;
-            DateTime end;
 
-            bool isStartValid = DateTime.TryParseExact(startDate, format, null, System.Globalization.DateTimeStyles.None, out start);
-            bool isEndValid = DateTime.TryParseExact(endDate, format, null, System.Globalization.DateTimeStyles.None, out end);
+            bool isStartValid = DateTime.TryParseExact(startDate, format, null, System.Globalization.DateTimeStyles.None, out DateTime start);
+            bool isEndValid = DateTime.TryParseExact(endDate, format, null, System.Globalization.DateTimeStyles.None, out DateTime end);
 
             if (start > end)
                 throw new ArgumentException("A kezdődátum nem lehet nagyobb, mint a végdátum.");
@@ -61,13 +66,11 @@ namespace ExchangeRateLibrary
 
         private List<string> GetCurrencies()
         {
-            List<string> output = new List<string>();
-
             var currenciesRequestBody = new GetCurrenciesRequestBody();
 
             var currencies = _MNBArfolyamServiceSoap.GetCurrencies(currenciesRequestBody);
 
-            output = LoadCurrenciesToList(currencies.GetCurrenciesResult);
+            List<string> output = LoadCurrenciesToList(currencies.GetCurrenciesResult);
 
             return output;
         }
@@ -85,9 +88,7 @@ namespace ExchangeRateLibrary
                 {
                     output.Add(xn.InnerText);
                 }
-            }
-
-            
+            }           
 
             return output;
         }
@@ -117,10 +118,12 @@ namespace ExchangeRateLibrary
                 while (rdr.Read())
                 {
 
-                    if (rdr.NodeType == XmlNodeType.Element && rdr.LocalName == "Unit")
+                    if (rdr.NodeType == XmlNodeType.Element && rdr.LocalName == XMLNodeConstans.Unit)
                     {
-                        currencyUnitModel = new CurrencyUnitModel();
-                        currencyUnitModel.Currency = rdr.GetAttribute("curr");
+                        currencyUnitModel = new CurrencyUnitModel
+                        {
+                            Currency = rdr.GetAttribute(XMLAttributeConstans.Curr)
+                        };
                     }
 
                     if (rdr.NodeType == XmlNodeType.Text)
@@ -128,11 +131,13 @@ namespace ExchangeRateLibrary
                         currencyUnitModel.Unit = rdr.Value;
                     }
 
-                    if (rdr.NodeType == XmlNodeType.EndElement && rdr.LocalName == "Unit")
+                    if (rdr.NodeType == XmlNodeType.EndElement && rdr.LocalName == XMLNodeConstans.Unit)
                     {
-                        CurrencyUnitModel finalCurrencyUnitModel = new CurrencyUnitModel();
-                        finalCurrencyUnitModel.Currency = currencyUnitModel.Currency;
-                        finalCurrencyUnitModel.Unit = currencyUnitModel.Unit;
+                        CurrencyUnitModel finalCurrencyUnitModel = new CurrencyUnitModel
+                        {
+                            Currency = currencyUnitModel.Currency,
+                            Unit = currencyUnitModel.Unit
+                        };
                         currencyUnitsList.Add(finalCurrencyUnitModel);
                     }
                 }
@@ -144,18 +149,17 @@ namespace ExchangeRateLibrary
 
         private List<ExchangeRateDailyModel> GetExchangeRates(int numberOfCurrencies, string startDate, string endDate)
         {
-            List<ExchangeRateDailyModel> output = new List<ExchangeRateDailyModel>();
-
-            var exchangeRatesRequestBody = new GetExchangeRatesRequestBody();
-
-            exchangeRatesRequestBody.startDate = startDate;
-            exchangeRatesRequestBody.endDate = endDate;
-            exchangeRatesRequestBody.currencyNames = string.Join(",", GetCurrencies().Take(numberOfCurrencies + 1));
+            var exchangeRatesRequestBody = new GetExchangeRatesRequestBody
+            {
+                startDate = startDate,
+                endDate = endDate,
+                currencyNames = string.Join(",", GetCurrencies().Take(numberOfCurrencies + 1))
+            };
 
             var exchangeRates = _MNBArfolyamServiceSoap
                             .GetExchangeRates(exchangeRatesRequestBody).GetExchangeRatesResult;
 
-            output = LoadExchangeRatesToList(exchangeRates);
+            List<ExchangeRateDailyModel>  output = LoadExchangeRatesToList(exchangeRates);
 
             return output;
         }
@@ -172,16 +176,20 @@ namespace ExchangeRateLibrary
                 while (rdr.Read())
                 {
 
-                    if (rdr.NodeType == XmlNodeType.Element && rdr.LocalName == "Day")
+                    if (rdr.NodeType == XmlNodeType.Element && rdr.LocalName == XMLNodeConstans.Day)
                     {
-                        exchangeRateDailyModel = new ExchangeRateDailyModel();
-                        exchangeRateDailyModel.Date = rdr.GetAttribute("date");
+                        exchangeRateDailyModel = new ExchangeRateDailyModel
+                        {
+                            Date = rdr.GetAttribute(XMLAttributeConstans.Date)
+                        };
                     }
 
-                    if (rdr.NodeType == XmlNodeType.Element && rdr.LocalName == "Rate")
+                    if (rdr.NodeType == XmlNodeType.Element && rdr.LocalName == XMLNodeConstans.Rate)
                     {
-                        exchangeRateModel = new ExchangeRateModel();
-                        exchangeRateModel.Currency = rdr.GetAttribute("curr");
+                        exchangeRateModel = new ExchangeRateModel
+                        {
+                            Currency = rdr.GetAttribute(XMLAttributeConstans.Curr)
+                        };
                     }
 
                     if (rdr.NodeType == XmlNodeType.Text)
@@ -189,7 +197,7 @@ namespace ExchangeRateLibrary
                         exchangeRateModel.ExchangeRate = rdr.Value;
                     }
 
-                    if (rdr.NodeType == XmlNodeType.EndElement && rdr.LocalName == "Rate")
+                    if (rdr.NodeType == XmlNodeType.EndElement && rdr.LocalName == XMLNodeConstans.Rate)
                     {
                         ExchangeRateModel finalExchangeRateModel = new ExchangeRateModel();
                         finalExchangeRateModel.Currency = exchangeRateModel.Currency;
@@ -198,7 +206,7 @@ namespace ExchangeRateLibrary
                         i++;
                     }
 
-                    if (rdr.NodeType == XmlNodeType.EndElement && rdr.LocalName == "Day")
+                    if (rdr.NodeType == XmlNodeType.EndElement && rdr.LocalName == XMLNodeConstans.Day)
                     {
                         output.Add(exchangeRateDailyModel);
                         i = 0;
@@ -213,7 +221,7 @@ namespace ExchangeRateLibrary
         {
             DataTable output = new DataTable();
 
-            output.Columns.Add("Datum/ISO");
+            output.Columns.Add(TableConstans.Datum);
 
             foreach (var currency in GetCurrencies())
             {
@@ -221,7 +229,7 @@ namespace ExchangeRateLibrary
             }
 
             output.Rows.Add();
-            output.Rows[0][0] = "Egység";
+            output.Rows[0][0] = TableConstans.Egyseg;
 
             foreach (var currenciesUnit in GetCurrencyUnits())
             {
