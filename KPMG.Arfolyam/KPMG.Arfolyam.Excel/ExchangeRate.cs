@@ -4,8 +4,6 @@ using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml;
 
 namespace KPMG.Arfolyam.Excel
@@ -18,7 +16,27 @@ namespace KPMG.Arfolyam.Excel
         {
             _MNBArfolyamServiceSoap = service;
 
-            GetCurrencyUnits();
+            GetExchangeRates("2020-01-01", "2020-01-10", 10);
+        }
+
+        public DataTable GetExchangeRates(string startDate, string endDate, int numberOfCurrencies)
+        {
+            DataTable output = CreateDatatable();
+
+            int i = 1;
+            foreach (var dailyModel in GetExchangeRates(numberOfCurrencies, startDate, endDate))
+            {
+                output.Rows.Add();
+                output.Rows[i]["Datum/ISO"] = dailyModel.Date;
+
+                foreach (var exchangeRate in dailyModel.ExchangeRate)
+                {
+                    output.Rows[i][exchangeRate.Currency] = exchangeRate.ExchangeRate;
+                }
+                i++;
+            }
+
+            return output;
         }
 
         private List<string> GetCurrencies()
@@ -96,7 +114,7 @@ namespace KPMG.Arfolyam.Excel
             return currencyUnitsList;
         }
 
-        private List<ExchangeRateDailyModel> GetExchangeRates(string startDate, string endDate, int numberOfCurrencies)
+        private List<ExchangeRateDailyModel> GetExchangeRates(int numberOfCurrencies, string startDate, string endDate)
         {
             List<ExchangeRateDailyModel> output = new List<ExchangeRateDailyModel>();
 
@@ -104,10 +122,59 @@ namespace KPMG.Arfolyam.Excel
 
             exchangeRatesRequestBody.startDate = startDate;
             exchangeRatesRequestBody.endDate = endDate;
-            exchangeRatesRequestBody.currencyNames = string.Join(",", GetCurrencies().Take(numberOfCurrencies));
+            exchangeRatesRequestBody.currencyNames = string.Join(",", GetCurrencies().Take(numberOfCurrencies+1));
 
+            var exchangeRates = _MNBArfolyamServiceSoap
+                            .GetExchangeRates(exchangeRatesRequestBody).GetExchangeRatesResult;
 
-            DataTable data = CreateDatatable();
+            output = LoadExchangeRatesToList(exchangeRates);
+
+            return output;
+        }
+
+        private List<ExchangeRateDailyModel> LoadExchangeRatesToList(string exchangeRates)
+        {
+            List<ExchangeRateDailyModel> output = new List<ExchangeRateDailyModel>();
+
+            XmlReader rdr = XmlReader.Create(new StringReader(exchangeRates));
+            ExchangeRateDailyModel exchangeRateDailyModel = null;
+            ExchangeRateModel exchangeRateModel = null;
+            int i = 0;
+            while (rdr.Read())
+            {
+
+                if (rdr.NodeType == XmlNodeType.Element && rdr.LocalName == "Day")
+                {
+                    exchangeRateDailyModel = new ExchangeRateDailyModel();
+                    exchangeRateDailyModel.Date = rdr.GetAttribute("date");
+                }
+
+                if (rdr.NodeType == XmlNodeType.Element && rdr.LocalName == "Rate")
+                {
+                    exchangeRateModel = new ExchangeRateModel();
+                    exchangeRateModel.Currency = rdr.GetAttribute("curr");
+                }
+
+                if (rdr.NodeType == XmlNodeType.Text)
+                {
+                    exchangeRateModel.ExchangeRate = rdr.Value;
+                }
+
+                if (rdr.NodeType == XmlNodeType.EndElement && rdr.LocalName == "Rate")
+                {
+                    ExchangeRateModel finalExchangeRateModel = new ExchangeRateModel();
+                    finalExchangeRateModel.Currency = exchangeRateModel.Currency;
+                    finalExchangeRateModel.ExchangeRate = exchangeRateModel.ExchangeRate;
+                    exchangeRateDailyModel.ExchangeRate.Add(finalExchangeRateModel);
+                    i++;
+                }
+
+                if (rdr.NodeType == XmlNodeType.EndElement && rdr.LocalName == "Day")
+                {
+                    output.Add(exchangeRateDailyModel);
+                    i = 0;
+                }
+            }
 
             return output;
         }
@@ -116,7 +183,20 @@ namespace KPMG.Arfolyam.Excel
         {
             DataTable output = new DataTable();
 
-            output.Columns.Add("");
+            output.Columns.Add("Datum/ISO");
+
+            foreach (var currency in GetCurrencies())
+            {
+                output.Columns.Add(currency);
+            }
+
+            output.Rows.Add();
+            output.Rows[0][0] = "Egység";
+
+            foreach (var currenciesUnit in GetCurrencyUnits())
+            {
+                output.Rows[0][currenciesUnit.Currency] = currenciesUnit.Unit;
+            }
 
             return output;
         }
