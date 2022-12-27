@@ -9,26 +9,28 @@ using System.Text;
 using System.Diagnostics;
 using ExchangeRateLibrary;
 using ExchangeRateLibrary.MNBArfolyamServiceSoapClient;
+using System.Threading;
 
 namespace KPMG.Arfolyam.Excel
 {
     public partial class BalazsRibbon
     {
-        OleDbConnection conn = null;
+        
         private void BalazsRibbon_Load(object sender, RibbonUIEventArgs e)
         {
-            conn = new OleDbConnection($@"Provider=Microsoft.ACE.OLEDB.12.0;Data Source={Directory.GetCurrentDirectory()}\ExchangeRates.accdb");
+            
         }
 
         private void BtnGetExchangeUnits_Click(object sender, RibbonControlEventArgs e)
         {
-            ExchangeRate exchangeRate = new ExchangeRate(new ExchangeRateLibrary.MNBArfolyamServiceSoapClient.MNBArfolyamServiceSoapClient());
+            using (ExchangeRate exchangeRate = new ExchangeRate(new ExchangeRateLibrary.MNBArfolyamServiceSoapClient.MNBArfolyamServiceSoapClient()))
+            {
+                System.Data.DataTable dataTable = exchangeRate.GetExchangeRates("2022-05-01", "2022-12-01", 34);
 
-            System.Data.DataTable dataTable = exchangeRate.GetExchangeRates("2015-01-01", "2020-04-01", 10);
+                LoadExchangeRatesToExcelWorksheet(dataTable);
 
-            LoadExchangeRatesToExcelWorksheet(dataTable);
-            
-            //LogActivity();           
+                //LogActivity();  
+            }
         }
 
         private void LoadExchangeRatesToExcelWorksheet(System.Data.DataTable data)
@@ -87,16 +89,22 @@ namespace KPMG.Arfolyam.Excel
             var now = DateTime.Now;
             var username = Environment.UserName;
 
-            conn.Open();
 
-            OleDbCommand cmd = conn.CreateCommand();
-            cmd.Parameters.Add("@now",OleDbType.Date).Value = now;
-            cmd.Parameters.Add("@username", OleDbType.VarWChar).Value = username;
-            cmd.CommandType = CommandType.Text;
-            cmd.CommandText = $"insert into ExchangeRateAccessDB (UserName, Indoklas, Timestamp)" +
-                $" values (@username,'null', @now)";
-            cmd.ExecuteNonQuery();
+            using (OleDbConnection conn = new OleDbConnection($@"Provider=Microsoft.ACE.OLEDB.12.0;Data Source={Directory.GetCurrentDirectory()}\ExchangeRates.accdb"))
+            {
+                using (OleDbCommand cmd = conn.CreateCommand())
+                {
+                    cmd.Parameters.Add("@now", OleDbType.Date).Value = now;
+                    cmd.Parameters.Add("@username", OleDbType.VarWChar).Value = username;
 
+                    cmd.CommandType = CommandType.Text;
+                    cmd.CommandText = $"insert into ExchangeRateAccessDB (UserName, Indoklas, Timestamp)" +
+                        $" values (@username,'null', @now)";
+
+                    conn.Open();
+                    cmd.ExecuteNonQuery();
+                }     
+            }
         }
     }
 }

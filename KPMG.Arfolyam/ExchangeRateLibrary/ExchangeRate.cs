@@ -12,13 +12,13 @@ using System.Xml;
 
 namespace ExchangeRateLibrary
 {
-    public class ExchangeRate
+    public class ExchangeRate : IDisposable
     {
-        private MNBArfolyamServiceSoapClient.MNBArfolyamServiceSoapClient _MNBArfolyamServiceSoap { get; set; }
+        private MNBArfolyamServiceSoapClient.MNBArfolyamServiceSoapClient _client { get; set; }
 
         public ExchangeRate(MNBArfolyamServiceSoapClient.MNBArfolyamServiceSoapClient service)
         {
-            _MNBArfolyamServiceSoap = service;
+            _client = service;
         }
 
         /// <summary>
@@ -31,7 +31,6 @@ namespace ExchangeRateLibrary
         {
             if (!IsValidDates(startDate, endDate))
                 throw new ArgumentException("A kezdő vagy a vég dátum nem megfelelő formátumban van! A helyes formátum: yyyy-MM-dd");
-
 
             DataTable output = CreateDatatable();
 
@@ -68,7 +67,7 @@ namespace ExchangeRateLibrary
         {
             var currenciesRequestBody = new GetCurrenciesRequestBody();
 
-            var currencies = _MNBArfolyamServiceSoap.GetCurrencies(currenciesRequestBody);
+            var currencies = _client.GetCurrencies(currenciesRequestBody);
 
             List<string> output = LoadCurrenciesToList(currencies.GetCurrenciesResult);
 
@@ -95,15 +94,14 @@ namespace ExchangeRateLibrary
 
         private List<CurrencyUnitModel> GetCurrencyUnits()
         {
-            List<CurrencyUnitModel> output = new List<CurrencyUnitModel>();
+            var currencyUnitsRequestBody = new GetCurrencyUnitsRequestBody
+            {
+                currencyNames = string.Join(",", GetCurrencies())
+            };
 
-            var currencyUnitsRequestBody = new GetCurrencyUnitsRequestBody();
+            var currencyUnits = _client.GetCurrencyUnits(currencyUnitsRequestBody).GetCurrencyUnitsResult;
 
-            currencyUnitsRequestBody.currencyNames = string.Join(",", GetCurrencies());
-
-            var currencyUnits = _MNBArfolyamServiceSoap.GetCurrencyUnits(currencyUnitsRequestBody).GetCurrencyUnitsResult;
-
-            output = LoadCurrencyUnitsToList(currencyUnits);
+           List<CurrencyUnitModel> output = LoadCurrencyUnitsToList(currencyUnits);
 
             return output;
         }
@@ -156,7 +154,7 @@ namespace ExchangeRateLibrary
                 currencyNames = string.Join(",", GetCurrencies().Take(numberOfCurrencies + 1))
             };
 
-            var exchangeRates = _MNBArfolyamServiceSoap
+            var exchangeRates = _client
                             .GetExchangeRates(exchangeRatesRequestBody).GetExchangeRatesResult;
 
             List<ExchangeRateDailyModel>  output = LoadExchangeRatesToList(exchangeRates);
@@ -199,9 +197,11 @@ namespace ExchangeRateLibrary
 
                     if (rdr.NodeType == XmlNodeType.EndElement && rdr.LocalName == XMLNodeConstans.Rate)
                     {
-                        ExchangeRateModel finalExchangeRateModel = new ExchangeRateModel();
-                        finalExchangeRateModel.Currency = exchangeRateModel.Currency;
-                        finalExchangeRateModel.ExchangeRate = exchangeRateModel.ExchangeRate;
+                        ExchangeRateModel finalExchangeRateModel = new ExchangeRateModel
+                        {
+                            Currency = exchangeRateModel.Currency,
+                            ExchangeRate = exchangeRateModel.ExchangeRate
+                        };
                         exchangeRateDailyModel.ExchangeRate.Add(finalExchangeRateModel);
                         i++;
                     }
@@ -221,7 +221,7 @@ namespace ExchangeRateLibrary
         {
             DataTable output = new DataTable();
 
-            output.Columns.Add(TableConstans.Datum);
+            output.Columns.Add(TableConstans.Datum);        
 
             foreach (var currency in GetCurrencies())
             {
@@ -237,6 +237,11 @@ namespace ExchangeRateLibrary
             }
 
             return output;
+        }
+
+        public void Dispose()
+        {
+            _client.Close();
         }
     }
 }
